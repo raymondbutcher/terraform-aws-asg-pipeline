@@ -22,7 +22,7 @@ locals {
     detailed_monitoring   = var.detailed_monitoring
     image_id              = var.image_id
     instance_profile_arn  = var.instance_profile_arn
-    instance_type         = var.instance_type
+    instance_types        = var.instance_types
     key_name              = var.key_name
     lifecycle_hooks       = var.lifecycle_hooks
     max_size              = var.max_size
@@ -35,6 +35,14 @@ locals {
       PauseTime                     = "PT1H"
     }, var.rolling_update_policy)
     security_group_ids = var.security_group_ids
+    spot_instances_policy = merge({
+      OnDemandAllocationStrategy = ""
+      OnDemandBaseCapacity = 0
+      OnDemandPercentageAboveBaseCapacity = 100
+      SpotAllocationStrategy = ""
+      SpotInstancePools = -1
+      SpotMaxPrice = ""
+    }, var.spot_instances_policy)
     subnet_ids         = var.subnet_ids
     tags               = var.tags
     target_group_arns  = var.target_group_arns

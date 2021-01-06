@@ -90,7 +90,7 @@ module "asg" {
 
   image_id             = data.aws_ssm_parameter.ami.value
   instance_profile_arn = module.instance_profile.profile_arn
-  instance_type        = "t3a.nano"
+  instance_types       = [{ type = "t3a.nano", weight = 1}]
   max_size             = 2
   min_size             = 1
   name                 = var.name

@@ -32,9 +32,12 @@ variable "instance_profile_arn" {
   type        = string
 }
 
-variable "instance_type" {
-  description = "The type of instances to use."
-  type        = string
+variable "instance_types" {
+  description = "The instance types to use and their weights. Set weight to 1 if there is only one instance type. See https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-instance-weighting.html"
+  type        = list(object({
+    type   = string
+    weight = number
+  }))
 }
 
 variable "key_name" {
@@ -87,6 +90,12 @@ variable "security_group_ids" {
   description = "A list of security groups for the instances."
   type        = list(string)
   default     = []
+}
+
+variable "spot_instances_policy" {
+  description = "Customise spot instances behaviour by setting any of OnDemandAllocationStrategy, OnDemandBaseCapacity, OnDemandPercentageAboveBaseCapacity, SpotAllocationStrategy, SpotInstancePools, SpotMaxPrice from https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-autoscaling-autoscalinggroup-instancesdistribution.html"
+  type        = map(string)
+  default     = {}
 }
 
 variable "subnet_ids" {

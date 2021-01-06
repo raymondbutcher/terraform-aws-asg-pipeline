@@ -43,9 +43,31 @@ Resources:
 %{ if length(subnet_ids) == 0 ~}
       AvailabilityZones: !GetAZs ""
 %{ endif ~}
-      LaunchTemplate:
-        LaunchTemplateId: !Ref LaunchTemplate
-        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      MixedInstancesPolicy:
+        InstancesDistribution:
+%{ if spot_instances_policy.OnDemandAllocationStrategy != "" ~}
+          OnDemandAllocationStrategy: ${spot_instances_policy.OnDemandAllocationStrategy}
+%{ endif ~}
+          OnDemandBaseCapacity: ${spot_instances_policy.OnDemandBaseCapacity}
+          OnDemandPercentageAboveBaseCapacity: ${spot_instances_policy.OnDemandPercentageAboveBaseCapacity}
+%{ if spot_instances_policy.SpotAllocationStrategy != "" ~}
+          SpotAllocationStrategy: ${spot_instances_policy.SpotAllocationStrategy}
+%{ endif ~}
+%{ if spot_instances_policy.SpotInstancePools > 0 ~}
+          SpotInstancePools: ${spot_instances_policy.SpotInstancePools}
+%{ endif ~}
+%{ if spot_instances_policy.SpotMaxPrice != "" ~}
+          SpotMaxPrice: ${spot_instances_policy.SpotMaxPrice}
+%{ endif ~}
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref LaunchTemplate
+            Version: !GetAtt LaunchTemplate.LatestVersionNumber
+          Overrides:
+%{ for instance in instance_types ~}
+          - InstanceType: ${item.instance}
+            WeightedCapacity: ${item.weight}
+%{ endfor ~}
 %{ if length(lifecycle_hooks) > 0 ~}
       LifecycleHookSpecificationList: ${jsonencode(lifecycle_hooks)}
 %{ endif ~}
@@ -101,7 +123,6 @@ Resources:
         IamInstanceProfile:
           Arn: "${instance_profile_arn}"
         ImageId: !GetAtt Params.ImageId
-        InstanceType: "${instance_type}"
 %{ if key_name != "" ~}
         KeyName: "${key_name}"
 %{ endif ~}
