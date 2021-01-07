@@ -65,8 +65,8 @@ Resources:
             Version: !GetAtt LaunchTemplate.LatestVersionNumber
           Overrides:
 %{ for instance in instance_types ~}
-          - InstanceType: ${item.instance}
-            WeightedCapacity: ${item.weight}
+          - InstanceType: ${instance.type}
+            WeightedCapacity: ${instance.weight}
 %{ endfor ~}
 %{ if length(lifecycle_hooks) > 0 ~}
       LifecycleHookSpecificationList: ${jsonencode(lifecycle_hooks)}
