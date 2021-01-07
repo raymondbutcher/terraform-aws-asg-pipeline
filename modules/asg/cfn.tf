@@ -14,20 +14,21 @@ locals {
     AppVersionName = aws_ssm_parameter.app_version_name[0].name
   } : {}
   cfn_template_body = trimspace(templatefile("${path.module}/cfn.yaml.tpl", {
-    access_control        = random_string.access_control.result
-    ami_pipeline          = var.ami_pipeline
-    app_pipeline          = var.app_pipeline
-    cfn_params_lambda_arn = module.cfn_params_lambda.arn
-    cfn_wait_lambda_arn   = module.cfn_wait_lambda.arn
-    detailed_monitoring   = var.detailed_monitoring
-    image_id              = var.image_id
-    instance_profile_arn  = var.instance_profile_arn
-    instance_types        = var.instance_types
-    key_name              = var.key_name
-    lifecycle_hooks       = var.lifecycle_hooks
-    max_size              = var.max_size
-    min_size              = var.min_size
-    name                  = var.name
+    access_control              = random_string.access_control.result
+    ami_pipeline                = var.ami_pipeline
+    app_pipeline                = var.app_pipeline
+    associate_public_ip_address = var.associate_public_ip_address
+    cfn_params_lambda_arn       = module.cfn_params_lambda.arn
+    cfn_wait_lambda_arn         = module.cfn_wait_lambda.arn
+    detailed_monitoring         = var.detailed_monitoring
+    image_id                    = var.image_id
+    instance_profile_arn        = var.instance_profile_arn
+    instance_types              = var.instance_types
+    key_name                    = var.key_name
+    lifecycle_hooks             = var.lifecycle_hooks
+    max_size                    = var.max_size
+    min_size                    = var.min_size
+    name                        = var.name
     rolling_update_policy = merge({
       MaxBatchSize                  = var.max_size
       MinInstancesInService         = -1
@@ -36,17 +37,17 @@ locals {
     }, var.rolling_update_policy)
     security_group_ids = var.security_group_ids
     spot_instances_policy = merge({
-      OnDemandAllocationStrategy = ""
-      OnDemandBaseCapacity = 0
+      OnDemandAllocationStrategy          = ""
+      OnDemandBaseCapacity                = 0
       OnDemandPercentageAboveBaseCapacity = 100
-      SpotAllocationStrategy = ""
-      SpotInstancePools = -1
-      SpotMaxPrice = ""
+      SpotAllocationStrategy              = ""
+      SpotInstancePools                   = -1
+      SpotMaxPrice                        = ""
     }, var.spot_instances_policy)
-    subnet_ids         = var.subnet_ids
-    tags               = var.tags
-    target_group_arns  = var.target_group_arns
-    user_data          = var.user_data
+    subnet_ids        = var.subnet_ids
+    tags              = var.tags
+    target_group_arns = var.target_group_arns
+    user_data         = var.user_data
   }))
   cfn_template_hash_parameters = {
     TemplateHash = sha256(local.cfn_template_body)

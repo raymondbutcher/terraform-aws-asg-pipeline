@@ -15,6 +15,12 @@ variable "app_pipeline" {
   default     = false
 }
 
+variable "associate_public_ip_address" {
+  description = "Enable this to associate a public IP address to the instance, can be useful when the subnet doesn't have MapPublicIpOnLaunch enabled."
+  type        = bool
+  default     = false
+}
+
 variable "detailed_monitoring" {
   description = "Specify true to enable detailed monitoring. Otherwise, basic monitoring is enabled."
   type        = bool
@@ -34,7 +40,7 @@ variable "instance_profile_arn" {
 
 variable "instance_types" {
   description = "The instance types to use and their weights. Set weight to 1 if there is only one instance type. See https://docs.aws.amazon.com/autoscaling/ec2/userguide/asg-instance-weighting.html"
-  type        = list(object({
+  type = list(object({
     type   = string
     weight = number
   }))
