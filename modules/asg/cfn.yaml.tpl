@@ -128,13 +128,9 @@ Resources:
 %{ endif ~}
         Monitoring:
           Enabled: ${jsonencode(detailed_monitoring)}
-%{ if associate_public_ip_address ~}
         NetworkInterfaces:
-        - AssociatePublicIpAddress: true
-%{ endif ~}
-%{ if length(security_group_ids) > 0 ~}
-        SecurityGroupIds: ${jsonencode(security_group_ids)}
-%{ endif ~}
+        - AssociatePublicIpAddress: ${jsonencode(associate_public_ip_address)}
+          Groups: ${jsonencode(security_group_ids)}
         TagSpecifications:
         - ResourceType: instance
           Tags:
