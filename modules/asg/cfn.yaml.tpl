@@ -130,6 +130,7 @@ Resources:
           Enabled: ${jsonencode(detailed_monitoring)}
         NetworkInterfaces:
         - AssociatePublicIpAddress: ${jsonencode(associate_public_ip_address)}
+          DeviceIndex: 0
           Groups: ${jsonencode(security_group_ids)}
         TagSpecifications:
         - ResourceType: instance
